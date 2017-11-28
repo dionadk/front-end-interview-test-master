@@ -8,7 +8,8 @@ class Test extends Component {
   super (props)
   this.state = {
     properties: [],
-    filter: []
+    filter: [],
+    type: 'All'
   }
 }
 
@@ -26,16 +27,6 @@ componentDidMount () {
 }
 
 
-// _onFilterChange(event) {
-//   event.preventDefault()
-//   const name = event.target.name
-//   if (!event.target.name) {
-//     this.setState({
-//       filteredDataList: this.state.properties
-//     });
-//   }
-// }
-
 _onFilterChange(event) {
   event.preventDefault()
   const name = event.target.name
@@ -48,12 +39,33 @@ _onFilterChange(event) {
             console.log(event.target.value)
 }
 
-handleSubmit(e){
-  e.preventDefault()
-        this.setState({
-          filteredDataList: this.state.properties.filter(property => property.buildingType.name === this.state.type && property.beds === parseInt(this.state.beds) && property.baths === parseInt(this.state.baths))
-        });
-}
+    handleSubmit(e){
+      e.preventDefault()
+      if(this.state.type === 'All'){
+            this.setState({
+              filteredDataList: this.state.properties.filter(
+                property => property.beds === parseInt(this.state.beds) &&
+                property.baths === parseInt(this.state.baths)
+              )
+            });
+          }
+            else {
+                  this.setState({
+                    filteredDataList: this.state.properties.filter(
+                      property => property.buildingType.name === this.state.type &&
+                      property.beds === parseInt(this.state.beds) &&
+                      property.baths === parseInt(this.state.baths)
+                    )
+                  });
+            }
+    }
+
+    handleClear(e){
+      e.preventDefault()
+      this.setState({
+        filteredDataList: this.state.properties
+      })
+    }
 
 
     render() {
@@ -62,10 +74,11 @@ handleSubmit(e){
             <div className="testContainer">
                 <div className="filterContainer">
                   <form onSubmit={this.handleSubmit.bind(this)}>
-                    <input name="baths" type="text" placeholder="baths" onChange={this._onFilterChange.bind(this)}/>
-                    <input name="beds" type="text" placeholder="beds" onChange={this._onFilterChange.bind(this)}/>
+                    Beds: <input id="txtBed" name="beds" type="text" placeholder="beds" onChange={this._onFilterChange.bind(this)}/>
+                    Baths: <input id="txtBath" name="baths" type="text" placeholder="baths" onChange={this._onFilterChange.bind(this)}/>
 
                     <select name="type" onChange={this._onFilterChange.bind(this)}>
+                      <option name="multiFamily">All</option>
                       <option name="multiFamily">multiFamily</option>
                       <option name="condo">condo</option>
                       <option name="business">business</option>
@@ -73,6 +86,7 @@ handleSubmit(e){
                       <option name="singleFamily">singleFamily</option>
                     </select>
                     <button type="submit" value="Submit" >Submit</button>
+                    <button type="submit" value="Clear" onClick={this.handleClear.bind(this)}>Clear</button>
                   </form>
                 </div>
                 <RemineTable properties={this.state.filteredDataList} />
