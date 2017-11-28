@@ -14,7 +14,6 @@ class Test extends Component {
 }
 
 componentDidMount () {
-
   // this._api.get('locations')
   axios.get(`http://localhost:8001/locations`)
         .then(response => {
@@ -26,7 +25,7 @@ componentDidMount () {
          })
 }
 
-
+// handling multiple user inputs
 _onFilterChange(event) {
   event.preventDefault()
   const name = event.target.name
@@ -34,13 +33,13 @@ _onFilterChange(event) {
     this.setState({
       [name]: event.target.value
     });
-
         console.log(event.target.name)
-            console.log(event.target.value)
 }
 
+// filter data
     handleSubmit(e){
       e.preventDefault()
+      // shows all building types with the specified no: of beds and baths
       if(this.state.type === 'All'){
             this.setState({
               filteredDataList: this.state.properties.filter(
@@ -49,6 +48,7 @@ _onFilterChange(event) {
               )
             });
           }
+          // shows the building types with the user specified no: of beds and baths
             else {
                   this.setState({
                     filteredDataList: this.state.properties.filter(
@@ -59,7 +59,7 @@ _onFilterChange(event) {
                   });
             }
     }
-
+  // clear filter
     handleClear(e){
       e.preventDefault()
       this.setState({
